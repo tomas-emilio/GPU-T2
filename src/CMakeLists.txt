@@ -5,6 +5,7 @@ set(SRC_FILES
     ConwayGameSequential.cpp)
 
 add_library(ConwayGameLib STATIC ${SRC_FILES})
+add_compile_definitions(KERNEL_PATH="${CMAKE_CURRENT_SOURCE_DIR}/ConwayKernel.cl")
 
 target_include_directories(ConwayGameLib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 

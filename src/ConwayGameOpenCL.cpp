@@ -20,7 +20,7 @@ ConwayGameOpenCL::ConwayGameOpenCL(std::vector<std::vector<int>> matrixGrid)
 }
 
 void ConwayGameOpenCL::initializeOpenCL() {
-    std::ifstream kernelFile("src/ConwayKernel.cl");
+    std::ifstream kernelFile(KERNEL_PATH);
     if (!kernelFile.is_open())
         throw std::runtime_error("Failed to open ConwayKernel.cl");
 
