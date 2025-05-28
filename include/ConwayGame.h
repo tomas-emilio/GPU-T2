@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <CL/opencl.hpp>
 
 class ConwayGame {
 protected:
@@ -39,7 +40,16 @@ public:
 };
 
 class ConwayGameOpenCL : public ConwayGame {
+private:
+    cl::Device device;
+    cl::Context context;
+    cl::CommandQueue queue;
+    cl::Program program;
+    cl::Kernel kernel;
+    cl::Buffer deviceGrid;
+    cl::Buffer deviceNextGrid;
 public:
+    void initializeOpenCL();
     void update();
 };
 
