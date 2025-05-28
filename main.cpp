@@ -1,23 +1,47 @@
+#include "include/ConwayGame.h"
 #include <iostream>
-#include <vector>
-#include <CL/opencl.hpp>
+#include <chrono>
 
-#define CL_HPP_TARGET_OPENCL_VERSION 120
-#define CL_HPP_MINIMUM_OPENCL_VERSION 120
-#define CL_HPP_ENABLE_EXCEPTIONS
+int main() {
+    const int rows = 512;
+    const int cols = 512;
 
-int main(int argc, char* argv[]) {
-    
-    std::vector<cl::Platform> platforms;
-    cl::Platform::get(&platforms);
-    std::cout << "Platform: " << platforms.front().getInfo<CL_PLATFORM_NAME>() << std::endl;
+    // ======= Sequential Game =======
+    std::cout << "Sequential Game of Life:\n";
+    ConwayGameSequential sequentialGame(rows, cols);
+    sequentialGame.randomizeGrid();
 
-    std::vector<cl::Device> devices;
-    // Select the platform.
-    platforms.front().getDevices(CL_DEVICE_TYPE_GPU, &devices);
-    std::cout << "Device: " << devices.front().getInfo<CL_DEVICE_NAME>()
-              << std::endl;
+    auto startSeq = std::chrono::high_resolution_clock::now();
+    sequentialGame.update();
+    auto endSeq = std::chrono::high_resolution_clock::now();
 
-    cl::Context context(devices);
-    cl::CommandQueue queue(context, devices.front());
+    std::chrono::duration<double, std::milli> durationSeq = endSeq - startSeq;
+    std::cout << "Sequential update took " << durationSeq.count() << " ms\n";
+
+    // ======= OpenCL Game =======
+    std::cout << "\nOpenCL Game of Life:\n";
+    ConwayGameOpenCL openclGame(rows, cols);
+    openclGame.randomizeGrid();
+    openclGame.initializeOpenCL();
+
+    auto startOcl = std::chrono::high_resolution_clock::now();
+    openclGame.update();
+    auto endOcl = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double, std::milli> durationOcl = endOcl - startOcl;
+    std::cout << "OpenCL update took " << durationOcl.count() << " ms\n";
+
+    /* ======= Optional CUDA Game Stub =======
+    std::cout << "\nCUDA Game of Life (if implemented):\n";
+    ConwayGameCuda cudaGame(rows, cols);
+    cudaGame.randomizeGrid();
+
+    auto startCuda = std::chrono::high_resolution_clock::now();
+    cudaGame.update(); // Only works if implemented
+    auto endCuda = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double, std::milli> durationCuda = endCuda - startCuda;
+    std::cout << "CUDA update took " << durationCuda.count() << " ms (may be 0 if not implemented)\n";*/
+
+    return 0;
 }

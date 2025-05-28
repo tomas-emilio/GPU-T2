@@ -36,6 +36,9 @@ public:
 
 class ConwayGameSequential : public ConwayGame {
 public:
+    ConwayGameSequential(int rows, int cols);
+    ConwayGameSequential(int rows, int cols, std::vector<int> vectorGrid);
+    ConwayGameSequential(std::vector<std::vector<int>> matrixGrid);
     void update();
 };
 
@@ -49,6 +52,10 @@ private:
     cl::Buffer deviceGrid;
     cl::Buffer deviceNextGrid;
 public:
+    ConwayGameOpenCL(int rows, int cols);
+    ConwayGameOpenCL(int rows, int cols, std::vector<int> vectorGrid);
+    ConwayGameOpenCL(std::vector<std::vector<int>> matrixGrid);
+
     void initializeOpenCL();
     void update();
 };
