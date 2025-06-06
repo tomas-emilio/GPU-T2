@@ -19,7 +19,7 @@ int main() {
     //configuramos experimentos con 
     //tamaños de grids y bloques multiplos y no multiplos de 32
     std::vector<int> gridSizes = {128, 256, 512, 1024};
-    std::vector<int> blockSizes = {8, 16, 32, 17, 24}; // múltiplos y no múltiplos de 32
+    std::vector<int> blockSizes = {16, 32, 64, 17, 24}; // múltiplos y no múltiplos de 32
     int iteraciones = 5; //iteraciones a promediar
     
     //ejecutamos experimento para las combinaciones
