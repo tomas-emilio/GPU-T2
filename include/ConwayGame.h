@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <CL/opencl.hpp>
+#include <string>
 
 class ConwayGame {
 public:
@@ -55,7 +56,7 @@ public:
     ConwayGameOpenCL(int rows, int cols, std::vector<int> vectorGrid);
     ConwayGameOpenCL(std::vector<std::vector<int>> matrixGrid);
 
-    void initializeOpenCL();
+    void initializeOpenCL(std::string kernelFilePath);
     void update() override;
 };
 

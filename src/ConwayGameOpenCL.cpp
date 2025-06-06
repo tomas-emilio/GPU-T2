@@ -8,19 +8,16 @@
 #define BLOCK_SIZE 32
 
 ConwayGameOpenCL::ConwayGameOpenCL(int rows, int cols) : ConwayGame(rows, cols) {
-    initializeOpenCL();
 }
 ConwayGameOpenCL::ConwayGameOpenCL(int rows, int cols, std::vector<int> vectorGrid) 
     : ConwayGame(rows, cols, vectorGrid) {
-    initializeOpenCL();
 }
 ConwayGameOpenCL::ConwayGameOpenCL(std::vector<std::vector<int>> matrixGrid) 
     : ConwayGame(matrixGrid) {
-    initializeOpenCL();
 }
 
-void ConwayGameOpenCL::initializeOpenCL() {
-    std::ifstream kernelFile(KERNEL_PATH);
+void ConwayGameOpenCL::initializeOpenCL(std::string kernelFilePath) {
+    std::ifstream kernelFile(std::string(KERNEL_PATH) + "/" +kernelFilePath);
     if (!kernelFile.is_open())
         throw std::runtime_error("Failed to open ConwayKernel.cl");
 
