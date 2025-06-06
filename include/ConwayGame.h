@@ -61,5 +61,9 @@ public:
 
 class ConwayGameCuda : public ConwayGame {
 public:
+    ConwayGameCuda(int rows, int cols) : ConwayGame(rows, cols) {};
     void update() override;
 };
+
+//funcion para version CUDA
+ConwayGameCuda* createConwayGameCuda(int rows, int cols, bool useIfs = false, int blockSize = 16);

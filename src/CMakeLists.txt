@@ -1,6 +1,6 @@
 set(SRC_FILES
     ConwayGame.cpp
-    ConwayGameCuda.cpp
+    ConwayGameCuda.cu
     ConwayGameOpenCL.cpp
     ConwayGameSequential.cpp)
 
