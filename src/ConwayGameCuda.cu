@@ -52,3 +52,54 @@ __global__ void conwayKernelConIfs(int* inputGrid, int* outputGrid, int rows, in
         ((vecinosVivos == 3) ? 1 : 0);
 }
 
+class ConwayGameCudaImpl : public ConwayGameCuda {
+private:
+    int* d_grid;
+    int* d_nextGrid;
+    size_t gridSize;
+    bool useIfs;
+    int blockSize;
+    
+public:
+    ConwayGameCudaImpl(int rows, int cols, bool useIfs, int blockSize) 
+        : ConwayGameCuda(rows, cols), useIfs(useIfs), blockSize(blockSize) {
+        this->rows = rows;
+        this->cols = cols;
+        this->grid.resize(rows * cols, 0);
+        this->nextGrid.resize(rows * cols, 0);
+        
+        gridSize = rows * cols * sizeof(int);
+        cudaMalloc(&d_grid, gridSize);
+        cudaMalloc(&d_nextGrid, gridSize);
+    }
+    
+    ~ConwayGameCudaImpl() {
+        cudaFree(d_grid);
+        cudaFree(d_nextGrid);
+    }
+    
+    void update() override {
+        cudaMemcpy(d_grid, grid.data(), gridSize, cudaMemcpyHostToDevice);
+        
+        dim3 blockDim(blockSize, blockSize);
+        dim3 gridDim((cols + blockSize - 1) / blockSize, (rows + blockSize - 1) / blockSize);
+        
+        if (useIfs) {
+            conwayKernelConIfs<<<gridDim, blockDim>>>(d_grid, d_nextGrid, rows, cols);
+        } else {
+            conwayKernel<<<gridDim, blockDim>>>(d_grid, d_nextGrid, rows, cols);
+        }
+        
+        cudaDeviceSynchronize();
+        cudaMemcpy(nextGrid.data(), d_nextGrid, gridSize, cudaMemcpyDeviceToHost);
+        std::swap(grid, nextGrid);
+    }
+};
+
+ConwayGameCuda* createConwayGameCuda(int rows, int cols, bool useIfs, int blockSize) {
+    return new ConwayGameCudaImpl(rows, cols, useIfs, blockSize);
+}
+
+void ConwayGameCuda::update() {
+    throw std::runtime_error("Use factory function");
+}
