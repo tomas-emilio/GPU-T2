@@ -3,6 +3,7 @@
 #include <chrono>
 #include <fstream>
 
+//funcion para medir tiempo de ejecucion
 double medirTiempo(std::function<void()> func) {
     auto start = std::chrono::high_resolution_clock::now();
     func();
@@ -11,14 +12,19 @@ double medirTiempo(std::function<void()> func) {
 }
 
 int main() {
+    //csv para guardar resultados
     std::ofstream csv("results.csv");
     csv << "Implementation,GridSize,BlockSize,UseIfs,Time Ms\n";
     
+    //configuramos experimentos con 
+    //tamaños de grids y bloques multiplos y no multiplos de 32
     std::vector<int> gridSizes = {128, 256, 512, 1024};
     std::vector<int> blockSizes = {8, 16, 32, 17, 24}; // múltiplos y no múltiplos de 32
-    int iteraciones = 5;
+    int iteraciones = 5; //iteraciones a promediar
     
+    //ejecutamos experimento para las combinaciones
     for (int gridSize : gridSizes) {
+        //creamos un grid aleatorio
         std::vector<int> testGrid(gridSize * gridSize);
         srand(42);
         for (int& cell : testGrid) cell = rand() % 2;
@@ -34,15 +40,18 @@ int main() {
         
         //CUDA
         for (int blockSize : blockSizes) {
+            //probamos ambos metodos de conteo
             for (bool useIfs : {false, true}) {
                 try {
                     ConwayGameCuda* cudaGame = createConwayGameCuda(gridSize, gridSize, useIfs, blockSize);
                     cudaGame->grid = testGrid;
                     
+                    //medicion del tiempo de ejecucion
                     double cudaTime = medirTiempo([&]() {
                         for (int i = 0; i < iteraciones; ++i) cudaGame->update();
                     }) / iteraciones;
                     
+                    //guardamos en csv
                     csv << "CUDA," << gridSize << "," << blockSize << "," 
                         << (useIfs ? "true" : "false") << "," << cudaTime << "\n";
                     
