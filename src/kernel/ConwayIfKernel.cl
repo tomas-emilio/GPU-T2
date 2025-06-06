@@ -11,14 +11,21 @@ kernel void conwayStep(global int *inputGrid, global int *outputGrid, int rows, 
         
         int x = cellId % worldSize;
         int y = cellId - x;
+        int xLeft = (x + cols - 1) % cols;
+        int xRight = (x + 1) % cols;
+        int yUp = (y + worldSize - cols) % worldSize;
+        int yDown = (y + cols) % worldSize;
+
         int aliveCells = 0;
-        for(int dx=-1; dx<=1; dx++){
-            for(int dy=-1; dy<=1; dy++){
-                if(inputGrid[rows*(y+dy) + (x+dx)]==1){
-                    aliveCells++;
-                }
-            }
-        }
+        if(inputGrid[yUp + xLeft]==1){aliveCells++;} 
+        if(inputGrid[yUp + x]==1){aliveCells++;} 
+        if(inputGrid[yUp + xRight]==1){aliveCells++;}          
+        if(inputGrid[y + xLeft]==1){aliveCells++;} 
+        if(inputGrid[y + xRight]==1){aliveCells++;}
+        if(inputGrid[yDown + xLeft]==1){aliveCells++;} 
+        if(inputGrid[yDown + x]==1){aliveCells++;} 
+        if(inputGrid[yDown + xRight]){aliveCells++;}
+
         outputGrid[x + y] = (aliveCells == 3 || (aliveCells == 2 && inputGrid[x + y])) ? 1 : 0;
     }
 }

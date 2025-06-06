@@ -11,7 +11,7 @@ int main() {
         for(int t=0; t<=10; t++){
             int rows = i;
             int cols = i;
-            csvFile << i*i << ",";
+            csvFile << i << ",";
             std::cout << "Grid size: " << i << " x " << i << "\n\n";
 
             // ======= Sequential Game =======

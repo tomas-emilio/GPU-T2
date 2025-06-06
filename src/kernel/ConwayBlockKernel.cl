@@ -1,5 +1,5 @@
 #define N 16
-#define BLOCK_SIZE 64
+#define BLOCK_SIZE 43
 #define RADIUS 3
 
 kernel void conwayStep(global int *inputGrid, global int *outputGrid, int rows, int cols) {
@@ -17,7 +17,7 @@ kernel void conwayStep(global int *inputGrid, global int *outputGrid, int rows, 
         int yDown = (y + cols) % worldSize;
 
         int aliveCells = inputGrid[yUp + xLeft] + inputGrid[yUp + x] + inputGrid[yUp + xRight] +
-                         inputGrid[y + xLeft] + inputGrid[y + x] + inputGrid[y + xRight] +
+                         inputGrid[y + xLeft] + inputGrid[y + xRight] +
                          inputGrid[yDown + xLeft] + inputGrid[yDown + x] + inputGrid[yDown + xRight];
 
         outputGrid[x + y] = (aliveCells == 3 || (aliveCells == 2 && inputGrid[x + y])) ? 1 : 0;
