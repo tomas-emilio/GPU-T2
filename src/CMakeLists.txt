@@ -1,14 +1,14 @@
 set(SRC_FILES
     ConwayGame.cpp
-    ConwayGameCuda.cpp
+    ConwayGameCuda.cu
     ConwayGameOpenCL.cpp
     ConwayGameSequential.cpp)
 
+enable_language(CUDA)
 add_library(ConwayGameLib STATIC ${SRC_FILES})
+
 add_compile_definitions(KERNEL_PATH="${CMAKE_CURRENT_SOURCE_DIR}/kernel")
-
 target_include_directories(ConwayGameLib PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kernel/ConwayKernel.cl
                ${CMAKE_CURRENT_BINARY_DIR}/kernel/ConwayKernel.cl COPYONLY)
@@ -22,3 +22,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kernel/ConwayBlockKernel.cl
 find_package(OpenCL REQUIRED)
 target_include_directories(ConwayGameLib PRIVATE ${OpenCL_INCLUDE_DIRS})
 target_link_libraries(ConwayGameLib PRIVATE ${OpenCL_LIBRARIES})
+
+find_package(CUDAToolkit REQUIRED)
+target_link_libraries(ConwayGameLib PRIVATE CUDA::cudart)
