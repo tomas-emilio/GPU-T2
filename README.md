@@ -1,22 +1,21 @@
 # Tarea 2 Computación en GPU
 
-## Como Ejecutar los test
-
-Primero que nada, hay que cargar el modulo googletest
-
+## Version OpenCL
+Para correr la prueba de OpenCL, se necesita buildear el proyecto con:
 ```
-git submodule update --init --recursive
-```
-
-Para buildear el proyecto y correr los test, hay que ejecutar
-
-```
-cmake -S . -B build -DBUILD_TESTING=ON
+cmake -S . -B build
 cmake --build build
-cd build && ctest
 ```
 
-Version CUDA
+Posterior a esto, se generara en la carpeta `/build` un binario `debug_main` el cual corre el script dentro de `main.cpp` para hacer los experimentos.
+```
+cd build
+./debug_main
+```
+Esto generará un csv con los resultados en `/build/results.csv`
+
+
+## Version CUDA
 Requisitos:
 - CMake 3.35+
 - CUDA Toolkit 11.0+
@@ -47,3 +46,21 @@ Configuraciones Probadas:
     - Block sizes: 16, 17, 24, 32, 64
     - Métodos: bucle vs ifs
     - Iteraciones: 5 por configuración (promediado)
+
+
+
+## Como Ejecutar los test
+
+Primero que nada, hay que cargar el modulo googletest
+
+```
+git submodule update --init --recursive
+```
+
+Para buildear el proyecto y correr los test, hay que ejecutar
+
+```
+cmake -S . -B build -DBUILD_TESTING=ON
+cmake --build build
+cd build && ctest
+```
